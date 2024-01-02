@@ -1,0 +1,21 @@
+spring:
+  port: 9090
+  servlet:
+    context-path: /duel-cards-api
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/duel_cards
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  liquibase:
+    default-schema: duel_cards
+    change-log: classpath:/liquibase/liquibase-changelog.yml
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    enabled: true
+
+logging.level:
+  br.com.sumicity.api.assine.proxy: DEBUG
+  org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+  org.hibernate.type.descriptor.sql.BasicBinder: TRACE #Exibe apenas parametros passados nas querys
