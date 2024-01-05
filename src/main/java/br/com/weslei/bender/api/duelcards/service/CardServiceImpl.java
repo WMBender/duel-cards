@@ -1,6 +1,6 @@
 package br.com.weslei.bender.api.duelcards.service;
 
-import br.com.weslei.bender.api.duelcards.domain.card.Card;
+import br.com.weslei.bender.api.duelcards.converter.CardConverter;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
@@ -16,23 +16,25 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
 
+    private final CardConverter cardConverter;
+
     @Override
     public List<CardResponseDto> getAllCards() {
         return cardRepository.findAll().stream()
-            .map(Card::toCardResponseDto)
-            .toList();
+                .map(cardConverter::toCardResponseDto)
+                .toList();
     }
 
     @Override
     public CardResponseDto getCardById(Long cardId) throws Exception {
         return cardRepository.findById(cardId)
-                .map(Card::toCardResponseDto)
+                .map(cardConverter::toCardResponseDto)
                 .orElseThrow(() -> new Exception("Carta não encontrada"));
     }
 
     @Override
     public void saveCard(CreateCardRequestDto request) {
-        var newCard = Card.toCard(request);
+        var newCard = cardConverter.toCard(request);
         cardRepository.save(newCard);
     }
 
@@ -47,7 +49,7 @@ public class CardServiceImpl implements CardService {
     public void updateCard(UpdateCardRequestDto requestDto) throws Exception {
         var cardToBeUpdated = cardRepository.findById(requestDto.getId())
                 .orElseThrow(() -> new Exception("Carta não encontrada"));
-        cardToBeUpdated = Card.toCard(requestDto);
+        cardToBeUpdated = cardConverter.toCard(requestDto);
         cardRepository.save(cardToBeUpdated);
     }
 }

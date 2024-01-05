@@ -1,8 +1,7 @@
 package br.com.weslei.bender.api.duelcards.domain.card;
 
-import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
-import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
-import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,47 +47,4 @@ public class Card {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public enum CardType {
-        MONSTER,
-        SPELL,
-        TRAP
-    }
-
-    public enum CardRarity {
-        COMMON,
-        RARE,
-        SUPER_RARE,
-        ULTRA_RARE
-    }
-
-    public static Card toCard(CreateCardRequestDto requestDto){
-        return Card.builder()
-            .name(requestDto.getName())
-            .description(requestDto.getDescription())
-            .cardType(requestDto.getCardType())
-            .cardRarity(requestDto.getCardRarity())
-            .build();
-    }
-
-    public static Card toCard(UpdateCardRequestDto requestDto){
-        return Card.builder()
-            .id(requestDto.getId())
-            .name(requestDto.getName())
-            .description(requestDto.getDescription())
-            .cardType(requestDto.getCardType())
-            .cardRarity(requestDto.getCardRarity())
-            .build();
-    }
-
-    public static CardResponseDto toCardResponseDto(Card card){
-        return CardResponseDto.builder()
-            .id(card.getId())
-            .name(card.getName())
-            .description(card.getDescription())
-            .cardType(card.getCardType())
-            .cardRarity(card.getCardRarity())
-            .createdAt(card.getCreatedAt())
-            .updateAt(card.getUpdatedAt())
-            .build();
-    }
 }

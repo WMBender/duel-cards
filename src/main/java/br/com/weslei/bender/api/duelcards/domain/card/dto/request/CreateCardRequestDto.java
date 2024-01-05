@@ -1,6 +1,7 @@
 package br.com.weslei.bender.api.duelcards.domain.card.dto.request;
 
-import br.com.weslei.bender.api.duelcards.domain.card.Card;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,9 +26,9 @@ public class CreateCardRequestDto {
     private String description;
 
     @NotNull(message = "Tipo da carta não pode ser nulo!")
-    private Card.CardType cardType;
+    private CardType cardType;
 
     @NotNull(message = "Raridade não pode ser nula!")
-    private Card.CardRarity cardRarity;
+    private CardRarity cardRarity;
 
 }

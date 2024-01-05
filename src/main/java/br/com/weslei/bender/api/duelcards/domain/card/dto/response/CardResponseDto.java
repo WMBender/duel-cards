@@ -1,6 +1,8 @@
 package br.com.weslei.bender.api.duelcards.domain.card.dto.response;
 
-import br.com.weslei.bender.api.duelcards.domain.card.Card;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +22,14 @@ public class CardResponseDto {
 
     private String description;
 
-    private Card.CardType cardType;
+    private CardType cardType;
 
-    private Card.CardRarity cardRarity;
+    private CardRarity cardRarity;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
-    private LocalDateTime updateAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime updatedAt;
 
 }
