@@ -1,8 +1,9 @@
-- changeSet:
-    id: create-table-card
-    author: weslei.bender
-    runInTransaction: true
-    changes:
-      - sqlFile:
-          path: card/ create-table-card.sql
-          relativeToChangelogFile: true
+databaseChangeLog:
+    - changeSet:
+        id: create-table-card
+        author: weslei.bender
+        runInTransaction: true
+        changes:
+          - sqlFile:
+              path: card/create-table-card.sql
+              relativeToChangelogFile: true

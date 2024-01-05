@@ -4,6 +4,7 @@ import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequ
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
 import br.com.weslei.bender.api.duelcards.service.CardService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +38,13 @@ public class CardController implements CardControllerApi {
 
     @Override
     @PostMapping
-    public void createCard(@RequestBody CreateCardRequestDto requestDto) {
+    public void createCard(@Valid @RequestBody CreateCardRequestDto requestDto) {
         cardService.saveCard(requestDto);
     }
 
     @Override
     @PutMapping
-    public void updateCard(UpdateCardRequestDto requestDto) throws Exception {
+    public void updateCard(@Valid @RequestBody UpdateCardRequestDto requestDto) throws Exception {
         cardService.updateCard(requestDto);
     }
 

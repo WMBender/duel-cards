@@ -16,17 +16,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateCardRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "Nome não pode ser nulo!")
     @Size(min = 1, max = 200)
     private String name;
-    @NotBlank
+
+    @NotBlank(message = "Descrição não pode ser nulo!")
     @Size(min = 1, max = 500)
     private String description;
 
-    @NotNull
+    @NotNull(message = "Tipo da carta não pode ser nulo!")
     private Card.CardType cardType;
 
-    @NotNull
+    @NotNull(message = "Raridade não pode ser nula!")
     private Card.CardRarity cardRarity;
 
 }

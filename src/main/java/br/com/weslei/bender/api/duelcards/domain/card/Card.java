@@ -3,6 +3,7 @@ package br.com.weslei.bender.api.duelcards.domain.card;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,6 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -38,13 +41,16 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private CardRarity cardRarity;
 
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    private LocalDateTime updateAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public enum CardType {
         MONSTER,
-        MAGIC,
+        SPELL,
         TRAP
     }
 
@@ -82,7 +88,7 @@ public class Card {
             .cardType(card.getCardType())
             .cardRarity(card.getCardRarity())
             .createdAt(card.getCreatedAt())
-            .updateAt(card.getUpdateAt())
+            .updateAt(card.getUpdatedAt())
             .build();
     }
 }

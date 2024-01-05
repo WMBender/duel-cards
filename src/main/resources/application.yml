@@ -1,7 +1,9 @@
-spring:
+server:
   port: 9090
   servlet:
     context-path: /duel-cards-api
+
+spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/duel_cards
