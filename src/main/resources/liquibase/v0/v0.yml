@@ -5,5 +5,11 @@ databaseChangeLog:
         runInTransaction: true
         changes:
           - sqlFile:
-              path: card/create-table-card.sql
+              path: card/create-table-monster_card.sql
+              relativeToChangelogFile: true
+          - sqlFile:
+              path: card/create-table-spell_card.sql
+              relativeToChangelogFile: true
+          - sqlFile:
+              path: card/create-table-trap_card.sql
               relativeToChangelogFile: true

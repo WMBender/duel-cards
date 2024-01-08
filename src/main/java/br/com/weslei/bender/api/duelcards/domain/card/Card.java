@@ -9,11 +9,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,21 +22,18 @@ import java.time.LocalDateTime;
 
 
 @Data
-@Table(name = "card")
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Card {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class Card {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String name;
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private CardType cardType;
 
     @Enumerated(EnumType.STRING)
     private CardRarity cardRarity;
@@ -46,5 +44,7 @@ public class Card {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public abstract CardType getCardType();
 
 }

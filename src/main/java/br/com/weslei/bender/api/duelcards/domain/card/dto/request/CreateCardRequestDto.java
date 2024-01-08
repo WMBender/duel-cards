@@ -1,7 +1,11 @@
 package br.com.weslei.bender.api.duelcards.domain.card.dto.request;
 
+import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.SpellCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.TrapCard;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -30,5 +34,14 @@ public class CreateCardRequestDto {
 
     @NotNull(message = "Raridade não pode ser nula!")
     private CardRarity cardRarity;
+
+    @JsonProperty(value = "monsterDetails")
+    private MonsterCard monsterCard;
+
+    @JsonProperty(value = "spellDetails")
+    private SpellCard spellCard;
+
+    @JsonProperty(value = "trapDetails")
+    private TrapCard trapCard;
 
 }

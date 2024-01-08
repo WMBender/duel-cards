@@ -5,6 +5,9 @@ import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequ
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
 import br.com.weslei.bender.api.duelcards.repository.CardRepository;
+import br.com.weslei.bender.api.duelcards.repository.MonsterRepository;
+import br.com.weslei.bender.api.duelcards.repository.SpellRepository;
+import br.com.weslei.bender.api.duelcards.repository.TrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,9 @@ import java.util.List;
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
+    private final MonsterRepository monsterRepository;
+    private final SpellRepository spellRepository;
+    private final TrapRepository trapRepository;
 
     private final CardConverter cardConverter;
 
@@ -34,8 +40,26 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void saveCard(CreateCardRequestDto request) {
-        var newCard = cardConverter.toCard(request);
-        cardRepository.save(newCard);
+        switch (request.getCardType()) {
+            case MONSTER -> saveMonsterCard(request);
+            case SPELL -> saveSpellCard(request);
+            case TRAP -> saveTrapCard(request);
+        }
+    }
+
+    private void saveMonsterCard(CreateCardRequestDto monsterCard) {
+        var monsterDetails = cardConverter.toMonsterCard(monsterCard);
+        monsterRepository.save(monsterDetails);
+    }
+
+    private void saveSpellCard(CreateCardRequestDto spellCard) {
+        var spellDetails = cardConverter.toSpellCard(spellCard);
+        spellRepository.save(spellDetails);
+    }
+
+    private void saveTrapCard(CreateCardRequestDto trapCard) {
+        var trapDetails = cardConverter.toTrapCard(trapCard);
+        trapRepository.save(trapDetails);
     }
 
     @Override
