@@ -21,8 +21,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class MonsterCard extends Card {
 
-    private Long id;
-
     @Enumerated(EnumType.STRING)
     private MonsterAttribute monsterAttribute;
 

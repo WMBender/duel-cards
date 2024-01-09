@@ -8,6 +8,7 @@ import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequ
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,22 @@ public class CardConverter {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    public CardConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+
+        modelMapper.addMappings(new PropertyMap<CreateCardRequestDto, MonsterCard>() {
+            @Override
+            protected void configure() {
+                map().setMonsterType(source.getMonsterCard().getMonsterType());
+                map().setHasEffect(source.getMonsterCard().getHasEffect());
+                map().setLevel(source.getMonsterCard().getLevel());
+                map().setAttackPoints(source.getMonsterCard().getAttackPoints());
+                map().setDefensePoints(source.getMonsterCard().getDefensePoints());
+            }
+        });
+    }
 
     public Card toCard(CreateCardRequestDto requestDto) {
         return modelMapper.map(requestDto, Card.class);

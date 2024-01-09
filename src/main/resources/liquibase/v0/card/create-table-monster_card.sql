@@ -3,7 +3,7 @@ CREATE TABLE monster_card(
     `name` VARCHAR(200) UNIQUE NOT NULL,
     `description` VARCHAR(500) NOT NULL,
     card_rarity VARCHAR(100) NOT NULL,
-    attribute VARCHAR(50) NOT NULL,
+    monster_attribute VARCHAR(50) NOT NULL,
     monster_type VARCHAR(100) NOT NULL,
     has_effect TINYINT(1) NOT NULL,
     `level` TINYINT,
