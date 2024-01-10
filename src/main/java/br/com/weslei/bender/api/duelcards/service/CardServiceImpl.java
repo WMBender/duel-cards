@@ -1,9 +1,14 @@
 package br.com.weslei.bender.api.duelcards.service;
 
 import br.com.weslei.bender.api.duelcards.converter.CardConverter;
+import br.com.weslei.bender.api.duelcards.domain.card.Card;
+import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.SpellCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.TrapCard;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import br.com.weslei.bender.api.duelcards.domain.card.exception.CardNotFoundException;
 import br.com.weslei.bender.api.duelcards.repository.CardRepository;
 import br.com.weslei.bender.api.duelcards.repository.MonsterRepository;
 import br.com.weslei.bender.api.duelcards.repository.SpellRepository;
@@ -33,9 +38,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardResponseDto getCardById(Long cardId) throws Exception {
-        return cardRepository.findById(cardId)
-                .map(cardConverter::toCardResponseDto)
-                .orElseThrow(() -> new Exception("Carta não encontrada"));
+        var foundCard = this.findCardThrowsExceptionIfNotFound(cardId);
+        return cardConverter.toCardResponseDto(foundCard);
     }
 
     @Override
@@ -64,16 +68,54 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void deleteCard(Long cardId) throws Exception {
-        var cardToBeDeleted = cardRepository.findById(cardId)
-                .orElseThrow(() -> new Exception("Carta não encontrada"));
+        var cardToBeDeleted = this.findCardThrowsExceptionIfNotFound(cardId);
         cardRepository.delete(cardToBeDeleted);
     }
 
     @Override
     public void updateCard(UpdateCardRequestDto requestDto) throws Exception {
-        var cardToBeUpdated = cardRepository.findById(requestDto.getId())
-                .orElseThrow(() -> new Exception("Carta não encontrada"));
-        cardToBeUpdated = cardConverter.toCard(requestDto);
-        cardRepository.save(cardToBeUpdated);
+        switch (requestDto.getCardType()) {
+            case MONSTER -> updateMonster(requestDto);
+            case SPELL -> updateSpell(requestDto);
+            case TRAP -> updateTrap(requestDto);
+        }
+    }
+
+    protected void updateMonster(UpdateCardRequestDto requestDto) throws Exception {
+        var card = this.findMonsterCardThrowsExceptionIfNotFound(requestDto.getId());
+        card.update(requestDto);
+        monsterRepository.save(card);
+    }
+
+    protected void updateSpell(UpdateCardRequestDto requestDto) throws Exception {
+        var card = this.findSpellCardThrowsExceptionIfNotFound(requestDto.getId());
+        card.update(requestDto);
+        spellRepository.save(card);
+    }
+
+    protected void updateTrap(UpdateCardRequestDto requestDto) throws Exception {
+        var card = this.findTrapCardThrowsExceptionIfNotFound(requestDto.getId());
+        card.update(requestDto);
+        trapRepository.save(card);
+    }
+
+    protected Card findCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+        return cardRepository.findById(cardId)
+                .orElseThrow(CardNotFoundException::new);
+    }
+
+    public MonsterCard findMonsterCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+        return monsterRepository.findById(cardId)
+                .orElseThrow(CardNotFoundException::new);
+    }
+
+    public SpellCard findSpellCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+        return spellRepository.findById(cardId)
+                .orElseThrow(CardNotFoundException::new);
+    }
+
+    public TrapCard findTrapCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+        return trapRepository.findById(cardId)
+                .orElseThrow(CardNotFoundException::new);
     }
 }

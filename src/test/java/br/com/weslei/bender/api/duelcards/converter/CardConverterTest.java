@@ -4,7 +4,9 @@ import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterAttribute;
 import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterCard;
 import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterType;
 import br.com.weslei.bender.api.duelcards.domain.card.details.SpellCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.SpellType;
 import br.com.weslei.bender.api.duelcards.domain.card.details.TrapCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.TrapType;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
@@ -100,13 +102,13 @@ class CardConverterTest {
 
     private SpellCard createSampleSpellCard() {
         return SpellCard.builder()
-                .spellType("SampleSpellType")
+                .spellType(SpellType.NORMAL)
                 .build();
     }
 
     private TrapCard createSampleTrapCard() {
         return TrapCard.builder()
-                .trapType("SampleTrapType")
+                .trapType(TrapType.NORMAL)
                 .build();
     }
 

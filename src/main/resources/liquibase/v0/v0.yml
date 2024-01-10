@@ -3,16 +3,16 @@ databaseChangeLog:
       id: create-table-card
       author: weslei.bender
       runInTransaction: true
-        changes:
-            - sqlFile:
-              path: card/create-table-monster_card.sql
-              relativeToChangelogFile: true
-              - sqlFile:
-                  path: card/create-table-spell_card.sql
-                  relativeToChangelogFile: true
-              - sqlFile:
-                  path: card/create-table-trap_card.sql
-                  relativeToChangelogFile: true
+      changes:
+        - sqlFile:
+            path: card/create-table-monster_card.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: card/create-table-spell_card.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: card/create-table-trap_card.sql
+            relativeToChangelogFile: true
   - changeSet:
       id: create-hibernate-sequences
       author: weslei.bender

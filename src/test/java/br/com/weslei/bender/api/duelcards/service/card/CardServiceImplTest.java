@@ -2,10 +2,23 @@ package br.com.weslei.bender.api.duelcards.service.card;
 
 import br.com.weslei.bender.api.duelcards.converter.CardConverter;
 import br.com.weslei.bender.api.duelcards.domain.card.Card;
+import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterAttribute;
+import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterType;
+import br.com.weslei.bender.api.duelcards.domain.card.details.SpellCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.SpellType;
+import br.com.weslei.bender.api.duelcards.domain.card.details.TrapCard;
+import br.com.weslei.bender.api.duelcards.domain.card.details.TrapType;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
+import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
+import br.com.weslei.bender.api.duelcards.domain.card.exception.CardNotFoundException;
 import br.com.weslei.bender.api.duelcards.repository.CardRepository;
+import br.com.weslei.bender.api.duelcards.repository.MonsterRepository;
+import br.com.weslei.bender.api.duelcards.repository.SpellRepository;
+import br.com.weslei.bender.api.duelcards.repository.TrapRepository;
 import br.com.weslei.bender.api.duelcards.service.CardServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +32,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +46,15 @@ class CardServiceImplTest {
 
     @Mock
     private CardRepository cardRepository;
+
+    @Mock
+    private MonsterRepository monsterRepository;
+
+    @Mock
+    private SpellRepository spellRepository;
+
+    @Mock
+    private TrapRepository trapRepository;
 
     @Mock
     private CardConverter cardConverter;
@@ -80,15 +104,41 @@ class CardServiceImplTest {
     }
 
     @Test
-    void saveCard_withSuccess() {
+    void saveCard_withMonsterCard_withSuccess() {
         //Arrange
-        var request = mock(CreateCardRequestDto.class);
-        var card = mock(Card.class);
+        var request = createMonsterRequestDto();
+        var card = mock(MonsterCard.class);
 
-        when(cardConverter.toCard(request)).thenReturn(card);
+        when(cardConverter.toMonsterCard(request)).thenReturn(card);
         //Act && Assert
         assertDoesNotThrow(() -> cardService.saveCard(request));
-        verify(cardRepository).save(card);
+        verify(monsterRepository).save(card);
+
+    }
+
+    @Test
+    void saveCard_withSpellCard_withSuccess() {
+        //Arrange
+        var request = createSpellRequestDto();
+        var card = mock(SpellCard.class);
+
+        when(cardConverter.toSpellCard(request)).thenReturn(card);
+        //Act && Assert
+        assertDoesNotThrow(() -> cardService.saveCard(request));
+        verify(spellRepository).save(card);
+
+    }
+
+    @Test
+    void saveCard_withTrapCard_withSuccess() {
+        //Arrange
+        var request = createTrapRequestDto();
+        var card = mock(TrapCard.class);
+
+        when(cardConverter.toTrapCard(request)).thenReturn(card);
+        //Act && Assert
+        assertDoesNotThrow(() -> cardService.saveCard(request));
+        verify(trapRepository).save(card);
 
     }
 
@@ -118,18 +168,59 @@ class CardServiceImplTest {
     }
 
     @Test
-    void updateCard_withSuccess() {
+    void updateCard_withMonsterCard_withSuccess() throws Exception {
         //Arrange
+        CardServiceImpl serviceSpy = spy(cardService);
         var request = mock(UpdateCardRequestDto.class);
-        var card = mock(Card.class);
-        var cardToBeUpdated = mock(Card.class);
+        var card = mock(MonsterCard.class);
+        var cardId = 1L;
 
-        when(cardRepository.findById(request.getId()))
-                .thenReturn(Optional.of(card));
-        when(cardConverter.toCard(request)).thenReturn(cardToBeUpdated);
+        when(request.getCardType()).thenReturn(CardType.MONSTER);
+        when(request.getId()).thenReturn(cardId);
+        doReturn(card)
+                .when(serviceSpy).findMonsterCardThrowsExceptionIfNotFound(cardId);
+
         //Act && Assert
-        assertDoesNotThrow(() -> cardService.updateCard(request));
-        verify(cardRepository).save(cardToBeUpdated);
+        assertDoesNotThrow(() -> serviceSpy.updateCard(request));
+        verify(card).update(request);
+        verify(monsterRepository).save(card);
+    }
+
+    @Test
+    void updateCard_withSpellCard_withSuccess() throws Exception {
+        //Arrange
+        CardServiceImpl serviceSpy = spy(cardService);
+        var request = mock(UpdateCardRequestDto.class);
+        var card = mock(SpellCard.class);
+        var cardId = 1L;
+
+        when(request.getCardType()).thenReturn(CardType.SPELL);
+        when(request.getId()).thenReturn(cardId);
+        doReturn(card)
+                .when(serviceSpy).findSpellCardThrowsExceptionIfNotFound(cardId);
+
+        //Act && Assert
+        assertDoesNotThrow(() -> serviceSpy.updateCard(request));
+        verify(card).update(request);
+        verify(spellRepository).save(card);
+    }
+
+    @Test
+    void updateCard_withTrapCard_withSuccess() throws Exception {
+        //Arrange
+        CardServiceImpl serviceSpy = spy(cardService);
+        var request = mock(UpdateCardRequestDto.class);
+        var card = mock(TrapCard.class);
+        var cardId = 1L;
+
+        when(request.getCardType()).thenReturn(CardType.TRAP);
+        when(request.getId()).thenReturn(cardId);
+        doReturn(card)
+                .when(serviceSpy).findTrapCardThrowsExceptionIfNotFound(cardId);
+        //Act && Assert
+        assertDoesNotThrow(() -> serviceSpy.updateCard(request));
+        verify(card).update(request);
+        verify(trapRepository).save(card);
     }
 
     @Test
@@ -137,10 +228,61 @@ class CardServiceImplTest {
         //Arrange
         var request = mock(UpdateCardRequestDto.class);
 
-        when(cardRepository.findById(request.getId()))
+        when(request.getCardType()).thenReturn(CardType.MONSTER);
+        when(monsterRepository.findById(request.getId()))
                 .thenReturn(Optional.empty());
         //Act && Assert
-        assertThrows(Exception.class, () -> cardService.updateCard(request));
+        assertThrows(CardNotFoundException.class, () -> cardService.updateCard(request));
+    }
+
+    private CreateCardRequestDto createMonsterRequestDto() {
+        var monsterCard = MonsterCard.builder()
+                .monsterAttribute(MonsterAttribute.FIRE)
+                .monsterType(MonsterType.DRAGON)
+                .hasEffect(Boolean.FALSE)
+                .level(10)
+                .attackPoints(3000)
+                .defensePoints(2000)
+                .build();
+
+        return CreateCardRequestDto.builder()
+                .name("dragon")
+                .description("A fearsome ancient dragon")
+                .cardRarity(CardRarity.COMMON)
+                .cardType(CardType.MONSTER)
+                .monsterCard(monsterCard)
+                .build();
+
+    }
+
+    private CreateCardRequestDto createSpellRequestDto() {
+        var spellCard = SpellCard.builder()
+                .spellType(SpellType.NORMAL)
+                .build();
+
+        return CreateCardRequestDto.builder()
+                .name("Pot of happiness")
+                .description("Gain 2000LP")
+                .cardRarity(CardRarity.COMMON)
+                .cardType(CardType.SPELL)
+                .spellCard(spellCard)
+                .build();
+
+    }
+
+    private CreateCardRequestDto createTrapRequestDto() {
+        var trapCard = TrapCard.builder()
+                .trapType(TrapType.NORMAL)
+                .build();
+
+        return CreateCardRequestDto.builder()
+                .name("Close match")
+                .description("Remove all cards on the field from play.")
+                .cardRarity(CardRarity.COMMON)
+                .cardType(CardType.TRAP)
+                .trapCard(trapCard)
+                .build();
+
     }
 
 }

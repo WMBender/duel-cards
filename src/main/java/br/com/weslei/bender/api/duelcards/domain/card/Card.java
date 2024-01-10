@@ -1,5 +1,6 @@
 package br.com.weslei.bender.api.duelcards.domain.card;
 
+import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardRarity;
 import br.com.weslei.bender.api.duelcards.domain.card.enumeration.CardType;
 import jakarta.persistence.Column;
@@ -46,5 +47,7 @@ public abstract class Card {
     private LocalDateTime updatedAt;
 
     public abstract CardType getCardType();
+
+    public abstract void update(UpdateCardRequestDto requestDto);
 
 }

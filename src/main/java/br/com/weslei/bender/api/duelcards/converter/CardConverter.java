@@ -43,10 +43,29 @@ public class CardConverter {
     }
 
     public CardResponseDto toCardResponseDto(Card card) {
-        return modelMapper.map(card, CardResponseDto.class);
+        CardResponseDto dto = modelMapper.map(card, CardResponseDto.class);
+
+        if (card instanceof MonsterCard monsterCard) {
+            dto.setMonsterAttribute(monsterCard.getMonsterAttribute());
+            dto.setMonsterType(monsterCard.getMonsterType());
+            dto.setHasEffect(monsterCard.getHasEffect());
+            dto.setLevel(monsterCard.getLevel());
+            dto.setAttackPoints(monsterCard.getAttackPoints());
+            dto.setDefensePoints(monsterCard.getDefensePoints());
+        } else if (card instanceof SpellCard spellCard) {
+            dto.setSpellType(spellCard.getSpellType());
+        } else if (card instanceof TrapCard trapCard) {
+            dto.setTrapType(trapCard.getTrapType());
+        }
+
+        return dto;
     }
 
     public MonsterCard toMonsterCard(CreateCardRequestDto requestDto) {
+        return modelMapper.map(requestDto, MonsterCard.class);
+    }
+
+    public MonsterCard toMonsterCard(UpdateCardRequestDto requestDto) {
         return modelMapper.map(requestDto, MonsterCard.class);
     }
 
@@ -54,7 +73,15 @@ public class CardConverter {
         return modelMapper.map(requestDto, SpellCard.class);
     }
 
+    public SpellCard toSpellCard(UpdateCardRequestDto requestDto) {
+        return modelMapper.map(requestDto, SpellCard.class);
+    }
+
     public TrapCard toTrapCard(CreateCardRequestDto requestDto) {
+        return modelMapper.map(requestDto, TrapCard.class);
+    }
+
+    public TrapCard toTrapCard(UpdateCardRequestDto requestDto) {
         return modelMapper.map(requestDto, TrapCard.class);
     }
 }
