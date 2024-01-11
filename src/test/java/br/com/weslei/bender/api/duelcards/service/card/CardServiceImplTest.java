@@ -29,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -230,20 +231,101 @@ class CardServiceImplTest {
 
         when(request.getCardType()).thenReturn(CardType.MONSTER);
         when(monsterRepository.findById(request.getId()))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         //Act && Assert
         assertThrows(CardNotFoundException.class, () -> cardService.updateCard(request));
     }
 
+    @Test
+    void findMonsterCardThrowsExceptionIfNotFound_withSuccess() throws CardNotFoundException {
+        //Arrange
+        var cardId = nextLong();
+        var card = new MonsterCard();
+
+        when(monsterRepository.findById(cardId)).thenReturn(Optional.of(card));
+        //Act
+        var result = cardService.findMonsterCardThrowsExceptionIfNotFound(cardId);
+
+        //Assert
+        assertEquals(card, result);
+    }
+
+    @Test
+    void findMonsterCardThrowsExceptionIfNotFound_withNotFoundException() {
+        //Arrange
+        var cardId = nextLong();
+        var card = new MonsterCard();
+
+        when(monsterRepository.findById(cardId)).thenReturn(Optional.empty());
+        //Act && Assert
+        assertThrows(CardNotFoundException.class, () ->
+            cardService.findMonsterCardThrowsExceptionIfNotFound(cardId)
+        );
+    }
+
+    @Test
+    void findSpellCardThrowsExceptionIfNotFound_withSuccess() throws CardNotFoundException {
+        //Arrange
+        var cardId = nextLong();
+        var card = new SpellCard();
+
+        when(spellRepository.findById(cardId)).thenReturn(Optional.of(card));
+        //Act
+        var result = cardService.findSpellCardThrowsExceptionIfNotFound(cardId);
+
+        //Assert
+        assertEquals(card, result);
+    }
+
+    @Test
+    void findSpellCardThrowsExceptionIfNotFound_withNotFoundException() {
+        //Arrange
+        var cardId = nextLong();
+        var card = new MonsterCard();
+
+        when(spellRepository.findById(cardId)).thenReturn(Optional.empty());
+        //Act && Assert
+        assertThrows(CardNotFoundException.class, () ->
+            cardService.findSpellCardThrowsExceptionIfNotFound(cardId)
+        );
+    }
+
+    @Test
+    void findTrapCardThrowsExceptionIfNotFound_withSuccess() throws CardNotFoundException {
+        //Arrange
+        var cardId = nextLong();
+        var card = new TrapCard();
+
+        when(trapRepository.findById(cardId)).thenReturn(Optional.of(card));
+        //Act
+        var result = cardService.findTrapCardThrowsExceptionIfNotFound(cardId);
+
+        //Assert
+        assertEquals(card, result);
+    }
+
+    @Test
+    void findTrapCardThrowsExceptionIfNotFound_withNotFoundException() {
+        //Arrange
+        var cardId = nextLong();
+        var card = new TrapCard();
+
+        when(trapRepository.findById(cardId)).thenReturn(Optional.empty());
+        //Act && Assert
+        assertThrows(CardNotFoundException.class, () ->
+            cardService.findTrapCardThrowsExceptionIfNotFound(cardId)
+        );
+    }
+
     private CreateCardRequestDto createMonsterRequestDto() {
         var monsterCard = MonsterCard.builder()
-                .monsterAttribute(MonsterAttribute.FIRE)
-                .monsterType(MonsterType.DRAGON)
-                .hasEffect(Boolean.FALSE)
-                .level(10)
-                .attackPoints(3000)
-                .defensePoints(2000)
-                .build();
+            .monsterAttribute(MonsterAttribute.FIRE)
+            .monsterType(MonsterType.DRAGON)
+            .hasEffect(Boolean.FALSE)
+            .level(10)
+            .attackPoints(3000)
+            .defensePoints(2000)
+            .build();
 
         return CreateCardRequestDto.builder()
                 .name("dragon")

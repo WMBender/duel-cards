@@ -4,6 +4,7 @@ import br.com.weslei.bender.api.duelcards.controller.CardController;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import br.com.weslei.bender.api.duelcards.domain.card.exception.CardNotFoundException;
 import br.com.weslei.bender.api.duelcards.service.CardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +46,7 @@ class CardControllerTest {
     }
 
     @Test
-    void getCardById_withSuccess() throws Exception {
+    void getCardById_withSuccess() throws CardNotFoundException {
         //Arrange
         var cardId = nextLong();
         var expectedResponse = mock(CardResponseDto.class);
@@ -53,7 +54,7 @@ class CardControllerTest {
         when(cardService.getCardById(cardId)).thenReturn(expectedResponse);
 
         //Act
-        var result = cardService.getCardById(cardId);
+        var result = cardController.getCardById(cardId);
 
         //Assert
         assertEquals(expectedResponse, result);
@@ -72,7 +73,7 @@ class CardControllerTest {
     }
 
     @Test
-    void updateCard_withSuccess() throws Exception {
+    void updateCard_withSuccess() throws CardNotFoundException {
         //Arrange
         var request = mock(UpdateCardRequestDto.class);
 
@@ -84,7 +85,7 @@ class CardControllerTest {
     }
 
     @Test
-    void deleteCard_withSuccess() throws Exception {
+    void deleteCard_withSuccess() throws CardNotFoundException {
         //Arrange
         var cardId = nextLong();
 
