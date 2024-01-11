@@ -5,7 +5,6 @@ import br.com.weslei.bender.api.duelcards.domain.card.details.MonsterCard;
 import br.com.weslei.bender.api.duelcards.domain.card.details.SpellCard;
 import br.com.weslei.bender.api.duelcards.domain.card.details.TrapCard;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
-import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CardConverter {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public CardConverter(ModelMapper modelMapper) {
@@ -32,14 +30,21 @@ public class CardConverter {
                 map().setDefensePoints(source.getMonsterCard().getDefensePoints());
             }
         });
-    }
 
-    public Card toCard(CreateCardRequestDto requestDto) {
-        return modelMapper.map(requestDto, Card.class);
-    }
+        modelMapper.addMappings(new PropertyMap<CreateCardRequestDto, SpellCard>() {
+            @Override
+            protected void configure() {
+                map().setSpellType(source.getSpellCard().getSpellType());
+            }
+        });
 
-    public Card toCard(UpdateCardRequestDto requestDto) {
-        return modelMapper.map(requestDto, Card.class);
+        modelMapper.addMappings(new PropertyMap<CreateCardRequestDto, TrapCard>() {
+            @Override
+            protected void configure() {
+                map().setTrapType(source.getTrapCard().getTrapType());
+            }
+        });
+
     }
 
     public CardResponseDto toCardResponseDto(Card card) {
@@ -65,15 +70,7 @@ public class CardConverter {
         return modelMapper.map(requestDto, MonsterCard.class);
     }
 
-    public MonsterCard toMonsterCard(UpdateCardRequestDto requestDto) {
-        return modelMapper.map(requestDto, MonsterCard.class);
-    }
-
     public SpellCard toSpellCard(CreateCardRequestDto requestDto) {
-        return modelMapper.map(requestDto, SpellCard.class);
-    }
-
-    public SpellCard toSpellCard(UpdateCardRequestDto requestDto) {
         return modelMapper.map(requestDto, SpellCard.class);
     }
 
@@ -81,7 +78,4 @@ public class CardConverter {
         return modelMapper.map(requestDto, TrapCard.class);
     }
 
-    public TrapCard toTrapCard(UpdateCardRequestDto requestDto) {
-        return modelMapper.map(requestDto, TrapCard.class);
-    }
 }

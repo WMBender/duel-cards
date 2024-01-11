@@ -3,6 +3,7 @@ package br.com.weslei.bender.api.duelcards.controller;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
+import br.com.weslei.bender.api.duelcards.domain.card.exception.CardNotFoundException;
 import br.com.weslei.bender.api.duelcards.service.CardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class CardController implements CardControllerApi {
 
     @Override
     @GetMapping("/{cardId}")
-    public CardResponseDto getCardById(@PathVariable Long cardId) throws Exception {
+    public CardResponseDto getCardById(@PathVariable Long cardId) throws CardNotFoundException {
         return cardService.getCardById(cardId);
     }
 
@@ -44,13 +45,13 @@ public class CardController implements CardControllerApi {
 
     @Override
     @PutMapping
-    public void updateCard(@Valid @RequestBody UpdateCardRequestDto requestDto) throws Exception {
+    public void updateCard(@Valid @RequestBody UpdateCardRequestDto requestDto) throws CardNotFoundException {
         cardService.updateCard(requestDto);
     }
 
     @Override
     @DeleteMapping("/{cardId}")
-    public void deleteCard(@PathVariable Long cardId) throws Exception {
+    public void deleteCard(@PathVariable Long cardId) throws CardNotFoundException {
         cardService.deleteCard(cardId);
     }
 }

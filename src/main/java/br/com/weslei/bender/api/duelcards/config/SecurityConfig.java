@@ -28,14 +28,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers(HttpMethod.GET, "/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST, "/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.DELETE, "/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.PUT, "/**").hasRole("USER")
-                    .anyRequest().authenticated()
-            )
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/**").hasRole("USER")
+                        .anyRequest().authenticated()
+                )
             .httpBasic(withDefaults())
             .formLogin(withDefaults());
 
@@ -44,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
+        UserDetails userDetails = User.builder()
                 .username(userName)
                 .password(password)
                 .roles("USER")

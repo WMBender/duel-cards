@@ -37,7 +37,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponseDto getCardById(Long cardId) throws Exception {
+    public CardResponseDto getCardById(Long cardId) throws CardNotFoundException {
         var foundCard = this.findCardThrowsExceptionIfNotFound(cardId);
         return cardConverter.toCardResponseDto(foundCard);
     }
@@ -67,13 +67,13 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void deleteCard(Long cardId) throws Exception {
+    public void deleteCard(Long cardId) throws CardNotFoundException {
         var cardToBeDeleted = this.findCardThrowsExceptionIfNotFound(cardId);
         cardRepository.delete(cardToBeDeleted);
     }
 
     @Override
-    public void updateCard(UpdateCardRequestDto requestDto) throws Exception {
+    public void updateCard(UpdateCardRequestDto requestDto) throws CardNotFoundException {
         switch (requestDto.getCardType()) {
             case MONSTER -> updateMonster(requestDto);
             case SPELL -> updateSpell(requestDto);
@@ -81,40 +81,40 @@ public class CardServiceImpl implements CardService {
         }
     }
 
-    protected void updateMonster(UpdateCardRequestDto requestDto) throws Exception {
+    protected void updateMonster(UpdateCardRequestDto requestDto) throws CardNotFoundException {
         var card = this.findMonsterCardThrowsExceptionIfNotFound(requestDto.getId());
         card.update(requestDto);
         monsterRepository.save(card);
     }
 
-    protected void updateSpell(UpdateCardRequestDto requestDto) throws Exception {
+    protected void updateSpell(UpdateCardRequestDto requestDto) throws CardNotFoundException {
         var card = this.findSpellCardThrowsExceptionIfNotFound(requestDto.getId());
         card.update(requestDto);
         spellRepository.save(card);
     }
 
-    protected void updateTrap(UpdateCardRequestDto requestDto) throws Exception {
+    protected void updateTrap(UpdateCardRequestDto requestDto) throws CardNotFoundException {
         var card = this.findTrapCardThrowsExceptionIfNotFound(requestDto.getId());
         card.update(requestDto);
         trapRepository.save(card);
     }
 
-    protected Card findCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+    protected Card findCardThrowsExceptionIfNotFound(Long cardId) throws CardNotFoundException {
         return cardRepository.findById(cardId)
                 .orElseThrow(CardNotFoundException::new);
     }
 
-    public MonsterCard findMonsterCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+    public MonsterCard findMonsterCardThrowsExceptionIfNotFound(Long cardId) throws CardNotFoundException {
         return monsterRepository.findById(cardId)
                 .orElseThrow(CardNotFoundException::new);
     }
 
-    public SpellCard findSpellCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+    public SpellCard findSpellCardThrowsExceptionIfNotFound(Long cardId) throws CardNotFoundException {
         return spellRepository.findById(cardId)
                 .orElseThrow(CardNotFoundException::new);
     }
 
-    public TrapCard findTrapCardThrowsExceptionIfNotFound(Long cardId) throws Exception {
+    public TrapCard findTrapCardThrowsExceptionIfNotFound(Long cardId) throws CardNotFoundException {
         return trapRepository.findById(cardId)
                 .orElseThrow(CardNotFoundException::new);
     }

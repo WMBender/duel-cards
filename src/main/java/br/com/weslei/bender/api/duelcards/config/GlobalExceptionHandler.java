@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,7 +23,7 @@ public class GlobalExceptionHandler {
         List<String> errors = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
