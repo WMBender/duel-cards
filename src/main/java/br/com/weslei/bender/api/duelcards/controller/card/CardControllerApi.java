@@ -1,4 +1,4 @@
-package br.com.weslei.bender.api.duelcards.controller;
+package br.com.weslei.bender.api.duelcards.controller.card;
 
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;

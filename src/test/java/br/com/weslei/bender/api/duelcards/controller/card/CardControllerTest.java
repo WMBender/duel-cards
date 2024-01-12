@@ -1,6 +1,5 @@
 package br.com.weslei.bender.api.duelcards.controller.card;
 
-import br.com.weslei.bender.api.duelcards.controller.CardController;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.CreateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.request.UpdateCardRequestDto;
 import br.com.weslei.bender.api.duelcards.domain.card.dto.response.CardResponseDto;
